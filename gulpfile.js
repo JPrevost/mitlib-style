@@ -15,11 +15,18 @@ var gulp = require('gulp'),
     del = require('del');
 
 gulp.task('styles', function() {
-  return sass('sass/libraries-main.scss', { style: 'expanded' })
+  return sass('_sass/libraries-main.scss', { style: 'expanded' })
     .pipe(autoprefixer('last 2 version'))
     .pipe(gulp.dest('dest/css'))
     .pipe(rename({suffix: '.min'}))
     .pipe(cssnano())
+    .pipe(gulp.dest('dest/css'))
+    .pipe(notify({ message: 'Styles task complete' }));
+});
+
+gulp.task('guide-styles', function() {
+  return sass('_sass/guide-helper.scss', { style: 'expanded' })
+    .pipe(autoprefixer('last 2 version'))
     .pipe(gulp.dest('dest/css'))
     .pipe(notify({ message: 'Styles task complete' }));
 });
@@ -44,13 +51,13 @@ gulp.task('clean', function() {
 
 
 gulp.task('default', ['clean'], function() {
-    gulp.start('styles', 'scripts');
+    gulp.start('styles', 'guide-styles', 'scripts');
 });
 
 gulp.task('watch', function() {
 
   // Watch .scss files
-  gulp.watch('sass/**/*.scss', ['styles']);
+  gulp.watch('_sass/**/*.scss', ['styles']);
 
   // Watch .js files
   gulp.watch('js/**/*.js', ['scripts']);
